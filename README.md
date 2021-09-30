@@ -1,3 +1,18 @@
+# Updates
+
+## 2021/09/30
+Added a visualization script: scripts/visualization/visualize_grasp_example.py
+Requires open3d (pip install).
+Opens a window showing the full specified cloud and the cloud 54 degrees away from it in red, the cloud cropped and sampled in green, and the grasp pose, all in the world frame. After closing this window, shows the cropped and downsampled cloud in the grasp frame.
+
+Usage example:
+
+`python visualize_grasp_example.py --object_name tapatio_hot_sauce --camera 2 --view 0 --grasp_index 0`
+
+Camera, as elsewhere, is an int between 1 and 5 representing the BigBIRD camera index, where 1 is horizontal, 5 is top-down, and 2-4 range between them. 
+View, as elsewhere, is an int divisible by 3 between 0 and 357, representing rotation of turntable when capturing BigBIRD point cloud. See BigBIRD dataset for more info.
+Grasp index is an integer representing the grasp to visualize. The maximum varies per cloud, and some clouds have no viewable grasps. 0 seems to correspond to grasps towards the top front left. Play around with this value to visualize different grasps; 500 is a reasonable guess for a grasp in the middle of an object.
+
 # MultiModalGrasping
 Code for Learning to Detect Multi-Modal Grasps for Dexterous Grasping in Dense Clutter
 
