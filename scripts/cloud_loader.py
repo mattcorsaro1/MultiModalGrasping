@@ -27,6 +27,14 @@ class CloudLoader:
         transformed_cloud = self.NUMPY_transformCloud(combined_cloud, handpose)
         return transformed_cloud.astype(np.float32)
 
+    def NUMPY_read(self, cloud_paths):
+        cloud_1 = np.load(cloud_paths[0])
+        cloud_2 = np.load(cloud_paths[1])
+        combined_cloud = np.concatenate((cloud_1, cloud_2))
+        if self.num_pointcloud_channels == 3:
+            combined_cloud = combined_cloud[:,:3]
+        return combined_cloud.astype(np.float32)
+
     def NUMPY_readSample(self, cloud_paths, indices):
         cloud_1 = np.load(cloud_paths[0])
         cloud_2 = np.load(cloud_paths[1])
@@ -120,7 +128,7 @@ class CloudLoader:
         return (self.NUMPY_select_random_indices(tf_cloud_1).tolist(), self.NUMPY_select_random_indices(tf_cloud_2).tolist())
 
     def NUMPY_select_random_indices(self, cloud):
-        new_cloud_num_points = self.min_num_points/2
+        new_cloud_num_points = int(self.min_num_points/2)
         valid_indices = np.arange(cloud.shape[0])
 
         if valid_indices.shape[0] == 0:
