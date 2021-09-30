@@ -23,6 +23,8 @@ def countLabels(labels):
 
 class DeepLearningModule(object):
     def __init__(self, train_data_paths, train_labels, test_data_paths, test_labels, output_path, num_labels):
+        # In order to plot the distribution of the train and test datasets, we keep this mapping from every
+        #     possible object in the dataset to a category.
         self.obj_type_dict = {"3m_high_tack_spray_adhesive": "cylinder", \
             "advil_liqui_gels": "box", \
             "bai5_sumatra_dragonfruit": "cylinder", \
@@ -119,6 +121,7 @@ class DeepLearningModule(object):
         self.multi_label_train_num_pos_ex, self.multi_label_train_num_neg_ex = [], []
         self.multi_label_test_num_pos_ex, self.multi_label_test_num_neg_ex = [], []
         if self.num_labels > 1:
+            # When training on more than one grasp type
             for label_type_i in range(len(self.train_labels[0])):
                 type_train_labels = [label[label_type_i] for label in self.train_labels]
                 type_test_labels = [label[label_type_i] for label in self.test_labels]
@@ -129,15 +132,18 @@ class DeepLearningModule(object):
                 self.multi_label_test_num_pos_ex.append(type_test_pos)
                 self.multi_label_test_num_neg_ex.append(type_test_neg)
         else:
+            # When training on only one grasp type
             self.single_label_train_num_pos_ex, self.single_label_train_num_neg_ex = countLabels(self.train_labels)
             self.single_label_test_num_pos_ex, self.single_label_test_num_neg_ex = countLabels(self.test_labels)
 
         self.train_acc_txt_filename = self.output_path + "/train_accs.txt"
         self.test_acc_txt_filename = self.output_path + "/test_accs.txt"
 
+        # Latest outputs, set in TensorFlowModule during training/testing
         self.latest_train_net_prob_out = None
         self.latest_test_net_prob_out = None
         self.latest_train_labels = None
+
         self.RM_latest_test_labels = None
 
     def process_train_epoch(self):
