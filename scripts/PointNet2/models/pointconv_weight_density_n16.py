@@ -41,13 +41,13 @@ def get_model(point_cloud, is_training, bn_decay=None, num_class=2, sigma=0.05, 
     net = tf_util.fully_connected(net, 64, bn=True, is_training=is_training, scope='fc3', bn_decay=bn_decay)
     net = tf_util.fully_connected(net, 32, bn=True, is_training=is_training, scope='fc5', bn_decay=bn_decay)
     if num_labels > 1:
-        net = tf_util.fully_connected(net, num_class*num_labels, bn=True, is_training=is_training, scope='fc6', bn_decay=bn_decay)
-        net = tf.reshape(net, [batch_size, num_labels, num_class])
+        net_out = tf_util.fully_connected(net, num_class*num_labels, bn=True, is_training=is_training, scope='fc6', bn_decay=bn_decay)
+        net_out = tf.reshape(net_out, [batch_size, num_labels, num_class])
     else:
-        net = tf_util.fully_connected(net, num_class, bn=True, is_training=is_training, scope='fc6', bn_decay=bn_decay)
+        net_out = tf_util.fully_connected(net, num_class, bn=True, is_training=is_training, scope='fc6', bn_decay=bn_decay)
 
-    softmax_not_for_training = tf.nn.softmax(net)
-    return net, softmax_not_for_training, end_points
+    softmax_not_for_training = tf.nn.softmax(net_out)
+    return net, net_out, softmax_not_for_training, end_points
 
 
 def get_loss(pred, label, end_points):

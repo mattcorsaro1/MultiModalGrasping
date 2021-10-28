@@ -76,7 +76,7 @@ class TensorFlowModule(DeepLearningModule):
         bn_decay_decay_rate = 0.5
         bn_decay_clip = 0.99
 
-        self.net = pointnet_wrapper.PointNet(self.label_to_train_with, self.batch_size, self.min_num_points, 3, self.learning_rate, decay_step, decay_rate, \
+        self.net = pointnet_wrapper.PointNet(self.batch_size, self.min_num_points, 3, self.learning_rate, decay_step, decay_rate, \
             bn_init_decay, bn_decay_decay_step, bn_decay_decay_rate, bn_decay_clip, num_labels=self.num_labels)
 
         # Create Session

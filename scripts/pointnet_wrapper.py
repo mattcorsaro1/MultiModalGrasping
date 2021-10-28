@@ -11,11 +11,10 @@ import tensorflow as tf
 # Input is point clouds
 # Adapted from PointNet2's train.py - github.com/charlesq34/pointnet2
 class PointNet:
-    def __init__(self, robotiq_label, batch_size, min_num_points, num_pointcloud_channels, base_learning_rate, decay_step, decay_rate, \
+    def __init__(self, batch_size, min_num_points, num_pointcloud_channels, base_learning_rate, decay_step, decay_rate, \
         bn_init_decay, bn_decay_decay_step, bn_decay_decay_rate, bn_decay_clip, decay_learning_rate=False, num_labels=1):
 
         print "PARAMS:"
-        print "robotiq_label", robotiq_label
         print "batch_size", batch_size
         print "min_num_points", min_num_points
         print "num_pointcloud_channels", num_pointcloud_channels
@@ -29,7 +28,6 @@ class PointNet:
         print "decay_learning_rate", decay_learning_rate
         print "num_labels", num_labels
 
-        self.robotiq_label = robotiq_label
         self.batch_size = batch_size
         self.min_num_points = min_num_points
         self.num_pointcloud_channels = num_pointcloud_channels
@@ -57,7 +55,7 @@ class PointNet:
         batch = tf.get_variable('batch', [], initializer=tf.constant_initializer(0), trainable=False)
         bn_decay = self.get_bn_decay(batch)
         # Get model and loss
-        pred, softmax, end_points = self.model.get_model(pointclouds_pl, is_training_pl, \
+        representation_before_output, pred, softmax, end_points = self.model.get_model(pointclouds_pl, is_training_pl, \
             bn_decay=bn_decay, num_labels=self.num_labels)
         self.model.get_loss(pred, labels_pl, end_points)
         losses = tf.get_collection('losses')
@@ -74,6 +72,7 @@ class PointNet:
         self.ops = {'pointclouds_pl': pointclouds_pl,
                'labels_pl': labels_pl,
                'is_training_pl': is_training_pl,
+               'representation_before_output': representation_before_output,
                'pred': pred,
                'softmax': softmax,
                'loss': total_loss,
